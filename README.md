@@ -1,1 +1,1 @@
-# FoodProcesingLLM
+# AI4FoodProcessing
