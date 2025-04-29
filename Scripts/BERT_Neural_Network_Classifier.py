@@ -3,8 +3,7 @@ import time
 import joblib
 import numpy as np
 import pandas as pd
-from functions_for_evaluation import *
-from functions_for_evaluation import AUCAUPkfold_from_file
+from Scripts.functions_for_evaluation import AUCAUPkfold_from_file
 from sklearn.model_selection import RandomizedSearchCV, StratifiedKFold
 from sklearn.metrics import (
     roc_auc_score, roc_curve,

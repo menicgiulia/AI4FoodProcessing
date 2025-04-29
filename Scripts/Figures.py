@@ -7,9 +7,9 @@ from matplotlib.colors import ListedColormap
 from seaborn import desaturate
 
 # Define model paths
-data_dir = "Data"
-model_dir = "Models"
-path_to_performance = "Metrics"
+data_dir = "Data/"
+model_dir = "Models/"
+path_to_performance = "Metrics/"
 
 models = {
     "BERT Random Forest": {"roc": path_to_performance + "BERT_Random_Forest_Classifier_ROC.pkl", "prc": path_to_performance + "BERT_Random_Forest_Classifier_PRC.pkl", "auc": path_to_performance + "BERT_Random_Forest_Classifier_AUC.pkl", "aup": path_to_performance + "BERT_Random_Forest_Classifier_AUP.pkl"},
@@ -42,8 +42,8 @@ def compute_nova_class_prevalence(splits_path, embeddings_file):
     prevalence = [(all_y_test == c).mean() for c in range(num_classes)]
     return prevalence
 
-embeddings_file="/home/g.ispirova/GDB/Data/bert_embeddings.tsv"
-splits_path="/home/g.ispirova/GDB/Final models/training_splits.pkl"
+embeddings_file=data_dir+"bert_embeddings.tsv"
+splits_path=model_dir+"training_splits.pkl"
 
 prevalence = compute_nova_class_prevalence(splits_path, embeddings_file)
 
@@ -152,10 +152,11 @@ def plot_interp_curves(save_path,xlabel,ylabel,metric_type):
 # ──────────────────────────────────────────────────────────────────────────────
 # 4. Generate & Save All Plots
 # ──────────────────────────────────────────────────────────────────────────────
-out = path_to_performance
-plot_raw_curves("roc", out + "NOVA_raw_ROC_Curves.pdf", "False Positive Rate", "True Positive Rate")
-plot_raw_curves("prc", out + "NOVA_raw_PRC_Curves.pdf", "Recall", "Precision")
-plot_interp_curves(out+"NOVA_interp_ROC_Curves.pdf","False Positive Rate","True Positive Rate",metric_type="roc")
-plot_interp_curves(out+"NOVA_interp_PRC_Curves.pdf","Recall","Precision",metric_type="prc")
-plot_auc_aup("auc",   out + "NOVA_AUC_Scores.pdf",   "AUC Score")
-plot_auc_aup("aup",   out + "NOVA_AUP_Scores.pdf",   "AUP Score")
+plot_raw_curves("roc", path_to_performance + "NOVA_raw_ROC_Curves.pdf", "False Positive Rate", "True Positive Rate")
+plot_raw_curves("prc", path_to_performance + "NOVA_raw_PRC_Curves.pdf", "Recall", "Precision")
+plot_interp_curves(path_to_performance + "NOVA_interp_ROC_Curves.pdf","False Positive Rate","True Positive Rate",metric_type="roc")
+plot_interp_curves(path_to_performance + "NOVA_interp_PRC_Curves.pdf","Recall","Precision",metric_type="prc")
+plot_auc_aup("auc", path_to_performance + "NOVA_AUC_Scores.pdf", "AUC Score")
+plot_auc_aup("aup", path_to_performance + "NOVA_AUP_Scores.pdf", "AUP Score")
+
+

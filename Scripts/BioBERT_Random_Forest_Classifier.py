@@ -3,8 +3,7 @@ import time
 import joblib
 import numpy as np
 import pandas as pd
-from functions_for_evaluation import *
-from functions_for_evaluation import AUCAUPkfold_from_file
+from Scripts.functions_for_evaluation import AUCAUPkfold_from_file
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import RandomizedSearchCV, StratifiedKFold, GridSearchCV
 from sklearn.metrics import (
@@ -31,6 +30,24 @@ timing_file = os.path.join(model_dir, "BioBERT_Random_Forest_Classifier_Timing.p
 
 os.makedirs(model_dir, exist_ok=True)
 os.makedirs(metrics_dir, exist_ok=True)
+
+from sklearn.base import ClassifierMixin
+
+models_path = models_prefix + "_models.pkl"
+models   = joblib.load(models_path) # list of fitted classifier objects
+if not isinstance(models, (list, tuple)):
+    raise TypeError(f"Expected a list or tuple of models, got {type(models)!r}")
+
+
+for idx, m in enumerate(models):
+    print(f" Model #{idx}: type={type(m).__name__}")
+    # check it at least looks like a classifier
+    if not isinstance(m, ClassifierMixin):
+        print(f"   ⚠️  Warning: {type(m).__name__} does not subclass sklearn.base.ClassifierMixin")
+    # check it has predict() and predict_proba()
+    for method in ("predict", "predict_proba"):
+        if not hasattr(m, method):
+            print(f"   ⚠️  Warning: model is missing `{method}` method")
 
 # -------------------------------
 # 1. Load Data

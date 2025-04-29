@@ -3,8 +3,7 @@ import time
 import joblib
 import numpy as np
 import pandas as pd
-from functions_for_evaluation import *
-from functions_for_evaluation import AUCAUPkfold_from_file
+from Scripts.functions_for_evaluation import AUCAUPkfold_from_file
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from sklearn.metrics import (

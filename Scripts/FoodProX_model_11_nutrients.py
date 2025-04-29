@@ -3,8 +3,7 @@ import time
 import joblib
 import numpy as np
 import pandas as pd
-from functions_for_evaluation import *
-from functions_for_evaluation import AUCAUPkfold_from_file
+from Scripts.functions_for_evaluation import AUCAUPkfold_from_file
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from sklearn.metrics import (
@@ -31,6 +30,7 @@ timing_file = os.path.join(model_dir, "FoodProX_model_11_nutrients_Timing.pkl")
 
 os.makedirs(model_dir, exist_ok=True)
 os.makedirs(metrics_dir, exist_ok=True)
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # 1. Load & transform OFF data
