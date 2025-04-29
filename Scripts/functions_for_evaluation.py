@@ -19,7 +19,10 @@ from imblearn.over_sampling import SMOTE
 import operator
 import joblib
 from xgboost import XGBClassifier
-
+from scikeras.wrappers import KerasClassifier
+from tensorflow import keras
+from tensorflow.keras import layers
+num_classes=4
 
 def multiclass_roc_auc_score(y_test, y_probs, average="macro"):
     lb = LabelBinarizer()
