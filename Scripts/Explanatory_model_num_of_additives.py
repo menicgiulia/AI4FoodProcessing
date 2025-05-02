@@ -19,14 +19,14 @@ from tqdm_joblib import tqdm_joblib
 data_dir = "Data"
 model_dir = "Models"
 metrics_dir = "Metrics"
-off_file            = os.path.join(data_dir, "Filtered_OFF_with_sentences.csv")
-tuning_idx_file     = os.path.join(model_dir, "tuning_data_indexes.csv")
+off_file = os.path.join(data_dir, "Filtered_OFF_with_sentences.csv")
+tuning_idx_file = os.path.join(model_dir, "tuning_data_indexes.csv")
 training_folds_file = os.path.join(model_dir, "training_splits.pkl")
-params_file   = os.path.join(model_dir, "Explanatory_model_num_of_additives_Params.pkl")
-cv_metrics_file     = os.path.join(metrics_dir, "Explanatory_model_num_of_additives_CVmetrics.pkl")
-metrics_prefix  = os.path.join(metrics_dir, "Explanatory_model_num_of_additives")
+params_file = os.path.join(model_dir, "Explanatory_model_num_of_additives_Params.pkl")
+cv_metrics_file = os.path.join(metrics_dir, "Explanatory_model_num_of_additives_CVmetrics.pkl")
+metrics_prefix = os.path.join(metrics_dir, "Explanatory_model_num_of_additives")
 models_prefix= os.path.join(model_dir, "Explanatory_model_num_of_additives")
-timing_file         = os.path.join(model_dir, "Explanatory_model_num_of_additives_Timing.pkl")
+timing_file = os.path.join(model_dir, "Explanatory_model_num_of_additives_Timing.pkl")
 
 os.makedirs(model_dir, exist_ok=True)
 os.makedirs(metrics_dir, exist_ok=True)
@@ -137,6 +137,3 @@ timing = {
 }
 
 joblib.dump(timing, timing_file)
-
-
-
