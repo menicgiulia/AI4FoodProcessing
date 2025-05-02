@@ -40,7 +40,6 @@ df_off = pd.read_csv(off_file, sep='\t')
 # Drop rows missing 'ingredients_text' or 'nova_group'
 df_off = df_off.dropna(subset=["ingredients_text", "nova_group"]).reset_index(drop=True)
 
-
 def clean_ingredients(text):
     no_paren = re.sub(r"\([^)]*\)", "", text)
     no_brack = re.sub(r"\[[^]]*\]", "", no_paren)
@@ -50,12 +49,13 @@ def clean_ingredients(text):
 # compute number of ingredients
 df_off['num_ingredients'] = df_off['ingredients_text'].astype(str).apply(clean_ingredients)
 
-# features and labels
+# Prepare feature matrix X and label y
 X = df_off[['num_ingredients']].values
 y = (df_off['nova_group'].astype(int) - 1).values
 num_classes = len(np.unique(y))
-print(f"Prepared OFF data: X shape {X.shape}, y shape {y.shape}, classes: {num_classes}")
 
+print(f"Prepared OFF data: X shape {X.shape}, y shape {y.shape}, classes: {num_classes}")
+print(f"Detected {num_classes} NOVA classes.")
 
 # ──────────────────────────────────────────────────────────────────────────────
 # 2. Load tuning & fold indexes
@@ -146,6 +146,3 @@ timing = {
 }
 
 joblib.dump(timing, timing_file)
-
-
-
