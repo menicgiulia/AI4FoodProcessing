@@ -24,58 +24,6 @@ from tensorflow import keras
 from tensorflow.keras import layers
 num_classes=4
 
-def multiclass_roc_auc_score(y_test, y_probs, average="macro"):
-    lb = LabelBinarizer()
-    lb.fit(y_test)
-    y_test = lb.transform(y_test)
-    return roc_auc_score(y_test, y_probs, average=average)
-
-def multiclass_average_precision_score(y_test, y_probs, average="macro"):
-    lb = LabelBinarizer()
-    lb.fit(y_test)
-    y_test = lb.transform(y_test)
-    return average_precision_score(y_test, y_probs, average=average)
-
-def multiclass_roc_curve(y_test, y_probs):
-    lb = LabelBinarizer()
-    lb.fit(y_test)
-    y_test = lb.transform(y_test)
-    fpr = dict()
-    tpr = dict()
-    for i in range(y_probs.shape[1]):
-        fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_probs[:, i])
-    return (fpr, tpr)
-
-def multiclass_average_precision_curve(y_test, y_probs):
-    lb = LabelBinarizer()
-    lb.fit(y_test)
-    y_test = lb.transform(y_test)
-    precision = dict()
-    recall = dict()
-    for i in range(y_probs.shape[1]):
-        precision[i], recall[i], _ = precision_recall_curve(y_test[:, i], y_probs[:, i])
-    return (precision, recall)
-
-def build_small_nn(input_dim, num_units=32, dropout_rate=0.0, learning_rate=0.001):
-    """
-    Build a small neural network with one hidden layer.
-      - input_dim: Number of input features.
-      - num_units: Number of units in the hidden layer.
-      - dropout_rate: Dropout rate (0.0 means no dropout).
-      - learning_rate: Learning rate for the Adam optimizer.
-    """
-    model = keras.Sequential()
-    model.add(layers.InputLayer(shape=(input_dim,)))
-    model.add(layers.Dense(num_units, activation='relu'))
-    if dropout_rate > 0.0:
-        model.add(layers.Dropout(dropout_rate))
-    model.add(layers.Dense(num_classes, activation='softmax'))
-    optimizer = keras.optimizers.Adam(learning_rate=learning_rate)
-    model.compile(optimizer=optimizer,
-                  loss='sparse_categorical_crossentropy',
-                  metrics=['accuracy'])
-    return model
-
 
 def AUCAUPkfold_from_file(X, y, type, params_file, splits, models_prefix, metrics_prefix, verbose=True):
     # 1) load best params
