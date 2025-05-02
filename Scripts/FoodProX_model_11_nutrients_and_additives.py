@@ -50,10 +50,13 @@ nutrients = nut_off[:-1]
 for col in nutrients:
     df_off[col] = np.log(df_off[col]).replace(-np.inf, -20)
 
-
+# Prepare feature matrix X and label y
 X = df_off[nut_off].values
 y = (df_off['nova_group'].astype(int) - 1).values
 num_classes = len(np.unique(y))
+
+print(f"Prepared OFF data: X shape {X.shape}, y shape {y.shape}")
+print(f"Detected {num_classes} NOVA classes.")
 
 # ──────────────────────────────────────────────────────────────────────────────
 # 2. Load tuning & fold indexes
@@ -107,6 +110,7 @@ with tqdm_joblib(tqdm(desc="RF tuning on 20%", total=50)):
     search.fit(X_tune, y_tune)
 
 param_search_time = time.time() - start_tune
+
 best_params = search.best_params_
 joblib.dump(best_params, params_file)
 
@@ -116,7 +120,7 @@ joblib.dump(best_params, params_file)
 start_cv = time.time()
 auc, aup, models = AUCAUPkfold_from_file(
     X, y,
-    tpye = 'RF',
+    type = 'RF',
     params_file=params_file,
     splits=df_folds,
     models_prefix=models_prefix,
@@ -124,8 +128,8 @@ auc, aup, models = AUCAUPkfold_from_file(
     verbose=True
 )
 
-
 cv_time = time.time() - start_cv
+
 cv_summary = {
     'auc_mean':  (auc.mean(), auc.std()),
     'auprc_mean':(aup.mean(), aup.std())
@@ -140,6 +144,3 @@ timing = {
 }
 
 joblib.dump(timing, timing_file)
-
-
-
