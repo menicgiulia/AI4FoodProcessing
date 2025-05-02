@@ -31,7 +31,6 @@ timing_file = os.path.join(model_dir, "FoodProX_model_11_nutrients_Timing.pkl")
 os.makedirs(model_dir, exist_ok=True)
 os.makedirs(metrics_dir, exist_ok=True)
 
-
 # ──────────────────────────────────────────────────────────────────────────────
 # 1. Load & transform OFF data
 # ──────────────────────────────────────────────────────────────────────────────
@@ -41,12 +40,17 @@ nut_off = [
  'cholesterol_100g','saturated-fat_100g','trans-fat_100g'
 ]
 
+print(f"Loading OFF data from {off_file}...")
 df_off = pd.read_csv(off_file, sep='\t')
 df_off = df_off.dropna(subset=nut_off + ['nova_group'])
 df_off[nut_off] = df_off[nut_off].apply(np.log).replace(-np.inf, -20)
 
 X = df_off[nut_off].values
 y = (df_off['nova_group'].astype(int) - 1).values
+num_classes = len(np.unique(y))
+
+print(f"Prepared OFF data: X shape {X.shape}, y shape {y.shape}")
+print(f"Detected {num_classes} NOVA classes.")
 
 # ──────────────────────────────────────────────────────────────────────────────
 # 2. Load tuning & fold indexes
@@ -96,13 +100,12 @@ search = GridSearchCV(
     verbose=2
 ) """
 
-
 start_tune = time.time()
 with tqdm_joblib(tqdm(desc="RF tuning on 20%", total=50)):
     search.fit(X_tune, y_tune)
 
-
 param_search_time = time.time() - start_tune
+
 best_params = search.best_params_
 joblib.dump(best_params, params_file)
 
@@ -136,6 +139,3 @@ timing = {
 }
 
 joblib.dump(timing, timing_file)
-
-
-
