@@ -13,8 +13,6 @@ from sklearn.metrics import (
 from tqdm import tqdm
 from tqdm_joblib import tqdm_joblib
 
-from sklearn.base import ClassifierMixin
-
 # ──────────────────────────────────────────────────────────────────────────────
 # Paths
 # ──────────────────────────────────────────────────────────────────────────────
@@ -32,23 +30,6 @@ timing_file = os.path.join(model_dir, "BioBERT_Random_Forest_Classifier_Timing.p
 
 os.makedirs(model_dir, exist_ok=True)
 os.makedirs(metrics_dir, exist_ok=True)
-
-
-models_path = models_prefix + "_models.pkl"
-models   = joblib.load(models_path) # list of fitted classifier objects
-if not isinstance(models, (list, tuple)):
-    raise TypeError(f"Expected a list or tuple of models, got {type(models)!r}")
-
-
-for idx, m in enumerate(models):
-    print(f" Model #{idx}: type={type(m).__name__}")
-    # check it at least looks like a classifier
-    if not isinstance(m, ClassifierMixin):
-        print(f"   ⚠️  Warning: {type(m).__name__} does not subclass sklearn.base.ClassifierMixin")
-    # check it has predict() and predict_proba()
-    for method in ("predict", "predict_proba"):
-        if not hasattr(m, method):
-            print(f"   ⚠️  Warning: model is missing `{method}` method")
 
 # -------------------------------
 # 1. Load Data
