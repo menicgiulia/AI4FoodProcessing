@@ -13,6 +13,8 @@ from sklearn.metrics import (
 from tqdm import tqdm
 from tqdm_joblib import tqdm_joblib
 
+from sklearn.base import ClassifierMixin
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Paths
 # ──────────────────────────────────────────────────────────────────────────────
@@ -20,7 +22,7 @@ data_dir = "Data"
 model_dir = "Models"
 metrics_dir = "Metrics"
 embeddings_file = os.path.join(data_dir, "bio_bert_embeddings.tsv")
-tuning_idx_file     = os.path.join(model_dir, "tuning_data_indexes.csv")
+tuning_idx_file = os.path.join(model_dir, "tuning_data_indexes.csv")
 training_folds_file = os.path.join(model_dir, "training_splits.pkl")
 params_file  = os.path.join(model_dir, "BioBERT_Random_Forest_Classifier_Params.pkl")
 cv_metrics_file = os.path.join(metrics_dir, "BioBERT_Random_Forest_Classifier_CVmetrics.pkl")
@@ -31,7 +33,6 @@ timing_file = os.path.join(model_dir, "BioBERT_Random_Forest_Classifier_Timing.p
 os.makedirs(model_dir, exist_ok=True)
 os.makedirs(metrics_dir, exist_ok=True)
 
-from sklearn.base import ClassifierMixin
 
 models_path = models_prefix + "_models.pkl"
 models   = joblib.load(models_path) # list of fitted classifier objects
@@ -59,9 +60,9 @@ embeddings_df['code'] = embeddings_df['code'].astype(str)
 X = embeddings_df.iloc[:, 2:-1].apply(pd.to_numeric, errors='coerce').fillna(0).values
 # Adjust labels (subtract 1)
 y = (embeddings_df["nova_group"].astype(int) - 1).values
+num_classes = len(np.unique(y))
 
 print(f"Data loaded: X shape {X.shape}, y shape {y.shape}")
-num_classes = len(np.unique(y))
 print(f"Number of classes detected: {num_classes}")
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -97,7 +98,6 @@ search = RandomizedSearchCV(
     scoring='accuracy',
     cv=5,
     n_jobs=-1,
-    random_state=42,
     verbose=2
 ) 
 
@@ -117,7 +117,6 @@ start_tune = time.time()
 with tqdm_joblib(tqdm(desc="RF tuning on 20%", total=50)):
     search.fit(X_tune, y_tune)
 
-
 param_search_time = time.time() - start_tune
 
 best_params = search.best_params_
@@ -127,7 +126,6 @@ joblib.dump(best_params, params_file)
 # 4. 5‑fold CV on the remaining 80%
 # ──────────────────────────────────────────────────────────────────────────────
 start_cv = time.time()
-
 auc, aup, models = AUCAUPkfold_from_file(
     X, y,
     type='RF',
@@ -154,6 +152,3 @@ timing = {
 }
 
 joblib.dump(timing, timing_file)
-
-
-
