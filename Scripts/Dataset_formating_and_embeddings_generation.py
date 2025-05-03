@@ -3,6 +3,7 @@ import torch
 from transformers import BertTokenizer, BertModel
 import csv
 import re
+from tqdm import tqdm
 
 data_dir = "Data"
 filtered_df=pd.read_csv('Filtered_OFF.csv',sep='\t')
@@ -42,7 +43,7 @@ def create_sentence(row):
 # Create sentences
 filtered_df["sentence"] = filtered_df.apply(create_sentence, axis=1)
 filtered_df.to_csv(
-    data_dir+"Filtered_OFF_with_sentences.csv',
+    data_dir+"Filtered_OFF_with_sentences.csv",
     sep='\t',
     index=False,
     quoting=csv.QUOTE_ALL,
@@ -54,7 +55,7 @@ filtered_df.to_csv(
 # BERT embeddings
 # ──────────────────────────────────────────────────────────────────────────────
 filtered_df = pd.read_csv(
-    data_dir+"Filtered_OFF_with_sentences.csv',
+    data_dir+"Filtered_OFF_with_sentences.csv",
     sep='\t',
     quoting=csv.QUOTE_ALL,
     encoding='utf-8'
