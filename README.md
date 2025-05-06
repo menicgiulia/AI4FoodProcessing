@@ -37,7 +37,6 @@ The codes for the various architectures used for each model are found below:
 - BERT with random forest: ```.../Scripts/BERT_Random_Forest_Classifier.py```
 - BERT with XGBoost: ```.../Scripts/BERT_XGBoost_Classifier.py```
 - BERT with neural network: ```.../Scripts/BERT_Neural_Network_Classifier.py```
-
 - BioBERT with random forest: ```.../Scripts/BioBERT_Random_Forest_Classifier.py```
 - BioBERT with XGBoost: ```.../Scripts/BioBERT_XGBoost_Classifier.py```
 - BioBERT with neural network: ```.../Scripts/BioBERT_Neural_Network_Classifier.py```
