@@ -41,5 +41,5 @@ The codes for the various architectures used for each model are found below:
 - BioBERT with XGBoost: ```.../Scripts/BioBERT_XGBoost_Classifier.py```
 - BioBERT with neural network: ```.../Scripts/BioBERT_Neural_Network_Classifier.py```
 
-#### Model Performance
-We analyze the performance of each model using the code: ```.../Scripts/functions_for_evalution.py```. Each model script calls the functions from this code to calculate the AUC and AUP scores for each fold of the cross validation and for each NOVA classification. The average and standard deviation of the AUC and AUP scores are provided within the chapter and within ```.../Metrics```. The code also provides ROC and PRC curves for the models. All models used in the chapter are stored in ```.../Models```.
+#### Model Performances
+We analyze the performance of each model using the code: ```.../Scripts/functions_for_evalution.py```. Each model script calls the functions from this code to calculate the AUC and AUP scores for each fold of the cross validation and for each NOVA classification. The average and standard deviation of the AUC and AUP scores are provided within the chapter and within ```.../Metrics```. The code also provides ROC and PRC curves for the models. All models used in the chapter are stored in ```.../Models```. The script to regenerate the figures within the chapter is found at ```/Scripts/Figures.py```.
