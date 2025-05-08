@@ -43,3 +43,99 @@ The codes for the various architectures used for each model are found below:
 
 #### Model Performances
 We analyze the performance of each model using the code: ```.../Scripts/functions_for_evalution.py```. Each model script calls the functions from this code to calculate the AUC and AUP scores for each fold of the cross validation and for each NOVA classification. The average and standard deviation of the AUC and AUP scores are provided within the chapter and within ```.../Metrics```. The code also provides ROC and PRC curves for the models. All models used in the chapter are stored in ```.../Models```. The script to regenerate the figures within the chapter is found at ```/Scripts/Figures.py```.
+
+
+## Repository Structure
+
+```text
+AI4FoodProcessing/
+├── Data/
+│   ├──Filtered_OFF.csv                     # Cleaned Open FF data 
+│   ├── Filtered_OFF_with_sentences.csv     # Cleaned OFF data with descriptions & ingredient lists & sentences
+│   ├── bert_embeddings.tsv                 # BERT embeddings
+│   └── bio_bert_embeddings.tsv             # BioBERT embeddings
+│
+├── Scripts/
+│   ├── Dataset_formatting_and_embeddings_generation.py  # Data cleaning, embedding generation
+│   ├── Make_splits_and_hyperparametertuning_set.py      # Creates tuning (20%) and CV (80%) splits
+│   ├── functions_for_evaluation.py                      # Function for training and evaluating the 5 CV models (generates ROC/PRC curves and AUC/AUP scores)
+│   ├── Figures.py                                       # Builds curve plots of ROC/PRC curves and box plots of AUC/AUP scores
+│   ├── BERT_Random_Forest_Classifier.py
+│   ├── BERT_Neural_Network_Classifier.py
+│   ├── BERT_XGBoost_Classifier.py
+│   ├── BioBERT_Random_Forest_Classifier.py
+│   ├── BioBERT_Neural_Network_Classifier.py
+│   ├── BioBERT_XGBoost_Classifier.py
+│   ├── Explanatory_model_num_of_ingredients.py
+│   ├── Explanatory_model_num_of_additives.py
+│   ├── FoodProX_model_11_nutrients.py
+│   └── FoodProX_model_11_nutrients_and_additives.py
+│
+├── Models/
+│   ├── *_{ROC,PRC,AUC,AUP}.pkl  # Serialized performance metrics for each model
+│   ├── *.h5                     # Saved neural network weights for Neural Network Classifiers
+│   ├── training_splits.pkl      # Predefined CV indices (5 folds, train and test splits)
+│   ├── tuning_data_indexes.csv  # Indices for the 20% hyperparameter tuning set
+│   └── *_{Timing}.csv           # Model training and inference runtimes
+│
+├── Metrics/
+│   ├── BERT_Neural_Network_Classifier_AUC.pkl                # Numeric AUC: area under the ROC curve summarizing classifier’s discrimination
+│   ├── BERT_Neural_Network_Classifier_AUP.pkl                # Numeric AUP: area under the Precision–Recall curve (average precision)
+│   ├── BERT_Neural_Network_Classifier_PRC.pkl                # Precision–Recall curve data: (precision, recall) pairs per threshold
+│   ├── BERT_Neural_Network_Classifier_ROC.pkl                # ROC curve data: (FPR, TPR) pairs per threshold
+│
+│   ├── BERT_Random_Forest_Classifier_AUC.pkl                 # Numeric AUC for Random Forest model
+│   ├── BERT_Random_Forest_Classifier_AUP.pkl                 # Numeric AUP for Random Forest model
+│   ├── BERT_Random_Forest_Classifier_PRC.pkl                 # PR curve data for Random Forest model
+│   ├── BERT_Random_Forest_Classifier_ROC.pkl                 # ROC curve data for Random Forest model
+│
+│   ├── BERT_XGBoost_Classifier_AUC.pkl                       # Numeric AUC for XGBoost model
+│   ├── BERT_XGBoost_Classifier_AUP.pkl                       # Numeric AUP for XGBoost model
+│   ├── BERT_XGBoost_Classifier_PRC.pkl                       # PR curve data for XGBoost model
+│   ├── BERT_XGBoost_Classifier_ROC.pkl                       # ROC curve data for XGBoost model
+│
+│   ├── BioBERT_Neural_Network_Classifier_AUC.pkl             # Numeric AUC for BioBERT Neural Net
+│   ├── BioBERT_Neural_Network_Classifier_AUP.pkl             # Numeric AUP for BioBERT Neural Net
+│   ├── BioBERT_Neural_Network_Classifier_PRC.pkl             # PR curve data for BioBERT Neural Net
+│   ├── BioBERT_Neural_Network_Classifier_ROC.pkl             # ROC curve data for BioBERT Neural Net
+│
+│   ├── BioBERT_Random_Forest_Classifier_AUC.pkl              # Numeric AUC for BioBERT Random Forest
+│   ├── BioBERT_Random_Forest_Classifier_AUP.pkl              # Numeric AUP for BioBERT Random Forest
+│   ├── BioBERT_Random_Forest_Classifier_PRC.pkl              # PR curve data for BioBERT Random Forest
+│   ├── BioBERT_Random_Forest_Classifier_ROC.pkl              # ROC curve data for BioBERT Random Forest
+│
+│   ├── BioBERT_XGBoost_Classifier_AUC.pkl                    # Numeric AUC for BioBERT XGBoost
+│   ├── BioBERT_XGBoost_Classifier_AUP.pkl                    # Numeric AUP for BioBERT XGBoost
+│   ├── BioBERT_XGBoost_Classifier_PRC.pkl                    # PR curve data for BioBERT XGBoost
+│   ├── BioBERT_XGBoost_Classifier_ROC.pkl                    # ROC curve data for BioBERT XGBoost
+│
+│   ├── Explanatory_model_num_of_additives_AUC.pkl            # AUC for model using additive counts
+│   ├── Explanatory_model_num_of_additives_AUP.pkl            # AUP for model using additive counts
+│   ├── Explanatory_model_num_of_additives_PRC.pkl            # PR curve data for additive-count model
+│   ├── Explanatory_model_num_of_additives_ROC.pkl            # ROC curve data for additive-count model
+│
+│   ├── Explanatory_model_num_of_ingredients_AUC.pkl          # AUC for model using ingredient counts
+│   ├── Explanatory_model_num_of_ingredients_AUP.pkl          # AUP for model using ingredient counts
+│   ├── Explanatory_model_num_of_ingredients_PRC.pkl          # PR curve data for ingredient-count model
+│   ├── Explanatory_model_num_of_ingredients_ROC.pkl          # ROC curve data for ingredient-count model
+│
+│   ├── FoodProX_model_11_nutrients_AUC.pkl                   # AUC for FoodProX (11 nutrients)
+│   ├── FoodProX_model_11_nutrients_AUP.pkl                   # AUP for FoodProX (11 nutrients)
+│   ├── FoodProX_model_11_nutrients_PRC.pkl                   # PR curve data for FoodProX (11 nutrients)
+│   ├── FoodProX_model_11_nutrients_ROC.pkl                   # ROC curve data for FoodProX (11 nutrients)
+│
+│   ├── FoodProX_model_11_nutrients_and_additives_AUC.pkl     # AUC for FoodProX (nutrients + additives)
+│   ├── FoodProX_model_11_nutrients_and_additives_AUP.pkl     # AUP for FoodProX (nutrients + additives)
+│   ├── FoodProX_model_11_nutrients_and_additives_PRC.pkl     # PR curve data for nutrients + additives
+│   ├── FoodProX_model_11_nutrients_and_additives_ROC.pkl     # ROC curve data for nutrients + additives
+│
+│   ├── NOVA_AUC_Scores.pdf                                   # Bar-plot of ROC AUC scores across NOVA categories
+│   ├── NOVA_AUP_Scores.pdf                                   # Bar-plot of PR AUP scores across NOVA categories
+│   ├── NOVA_interp_PRC_Curves.pdf                            # Interpolated PR curves for NOVA groups
+│   ├── NOVA_interp_ROC_Curves.pdf                            # Interpolated ROC curves for NOVA groups
+│   ├── NOVA_raw_PRC_Curves.pdf                               # Raw PR curves for NOVA groups
+│   └── NOVA_raw_ROC_Curves.pdf                               # Raw ROC curves for NOVA groups
+│
+└── README.md
+└── README.md
+
