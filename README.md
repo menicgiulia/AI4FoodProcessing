@@ -9,7 +9,7 @@ This GitHub repository is for **Chapter 11: Informatics for Food Processing** of
 ![Overview Pipeline](https://raw.githubusercontent.com/menicgiulia/AI4FoodProcessing/main/image/case_study_pipeline.png)
 
 ### Open Food Facts 
-The Open Food Facts database, downloaded January 2025, is used as input data in all models. The data was filtered to ensure food items reported the ingredient list, number of additives, and the 11 most abundantly reported nutrients within Open Food Facts (proteins, fat, carbohydrates, sugars, fiber, calcium, iron, sodium, cholesterol, saturated fat, and trans fat). Since the study includes BERT and BioBERT models, LLMs trained on english, the dataset was additionally filtered to ensure there was an english ingredient list available.
+The Open Food Facts database, downloaded April 2024, is used as input data in all models. The data was filtered to ensure food items reported the ingredient list, number of additives, and the 11 most abundantly reported nutrients within Open Food Facts (proteins, fat, carbohydrates, sugars, fiber, calcium, iron, sodium, cholesterol, saturated fat, and trans fat). Since the study includes BERT and BioBERT models, LLMs trained on english, the dataset was additionally filtered to ensure there was an english ingredient list available.
 
 - Explanatory and FoodProX Models use ```.../Data/Filtered_OFF.zip```
 - LLM Model with BERT uses ```.../Data/bert_embeddings.zip```
