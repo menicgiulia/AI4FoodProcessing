@@ -1,4 +1,6 @@
-# Informatics for Food Processing 
+# Informatics for Food Processing  
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
+
 #### Authors: Gordana Ispirova, Michael Sebek, Giulia Menichetti (giulia.menichetti@channing.harvard.edu)
 
 ## Introduction
