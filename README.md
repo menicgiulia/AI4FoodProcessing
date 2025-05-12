@@ -139,3 +139,8 @@ AI4FoodProcessing/
 └── README.md
 └── README.md
 
+
+## Licence
+
+Note: This code is provided for research and educational purposes.
+For inquiries about commercial licensing, please contact giulia.menichetti@channing.harvard.edu.
