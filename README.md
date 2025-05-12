@@ -44,7 +44,6 @@ The codes for the various architectures used for each model are found below:
 #### Model Performances
 We analyze the performance of each model using the code: ```.../Scripts/functions_for_evalution.py```. Each model script calls the functions from this code to calculate the AUC and AUP scores for each fold of the cross validation and for each NOVA classification. The average and standard deviation of the AUC and AUP scores are provided within the chapter and within ```.../Metrics```. The code also provides ROC and PRC curves for the models. All models used in the chapter are stored in ```.../Models```. The script to regenerate the figures within the chapter is found at ```/Scripts/Figures.py```.
 
-
 ## Repository Structure
 
 ```text
@@ -138,9 +137,15 @@ AI4FoodProcessing/
 │
 └── README.md
 └── README.md
-
+```
 
 ## Licence
 
-Note: This code is provided for research and educational purposes.
-For inquiries about commercial licensing, please contact giulia.menichetti@channing.harvard.edu.
+This project is licensed under the [GNU Affero General Public License v3.0](LICENSE).
+
+> **Note:** This code is provided for research and educational purposes only.  
+> For inquiries about commercial licensing, please contact  
+> Giulia Menichetti ‹giulia.menichetti@channing.harvard.edu›.
+
+
+
