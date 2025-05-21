@@ -134,7 +134,6 @@ AI4FoodProcessing/
 │   └── NOVA_raw_ROC_Curves.pdf                               # Raw ROC curves for NOVA groups
 │
 └── README.md
-└── README.md
 ```
 
 ## Licence
