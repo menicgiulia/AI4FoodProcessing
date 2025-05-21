@@ -73,11 +73,7 @@ AI4FoodProcessing/
 │   └── FoodProX_model_11_nutrients_and_additives.py
 │
 ├── Models/
-│   ├── *_{ROC,PRC,AUC,AUP}.pkl  # Serialized performance metrics for each model
-│   ├── *.h5                     # Saved neural network weights for Neural Network Classifiers
-│   ├── training_splits.pkl      # Predefined CV indices (5 folds, train and test splits)
-│   ├── tuning_data_indexes.csv  # Indices for the 20% hyperparameter tuning set
-│   └── *_{Timing}.csv           # Model training and inference runtimes
+│   ├── Available for download via Google Drive: https://drive.google.com/drive/folders/1yFPhhOpX5XsdMhQRPujv6uXoC6mYMxxx?usp=drive_link
 │
 ├── Metrics/
 │   ├── BERT_Neural_Network_Classifier_AUC.pkl                # Numeric AUC: area under the ROC curve summarizing classifier’s discrimination
