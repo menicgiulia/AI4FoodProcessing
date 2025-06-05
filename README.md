@@ -136,9 +136,9 @@ AI4FoodProcessing/
 └── README.md
 ```
 
-## Licence
+## License
 
-This project is licensed under the [GNU Affero General Public License v3.0](LICENSE).
+This project is licensed under the [GNU Affero General Public License v3.0](LICENSE.txt).
 
 > **Note:** This code is provided for research and educational purposes only.  
 > For inquiries about commercial licensing, please contact  
