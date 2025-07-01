@@ -20,14 +20,14 @@ import re
 data_dir = "Data"
 model_dir = "Models"
 metrics_dir = "Metrics"
-off_file = os.path.join(data_dir, "Filtered_OFF_with_sentences.csv")
-tuning_idx_file = os.path.join(model_dir, "tuning_data_indexes.csv")
+off_file            = os.path.join(data_dir, "Filtered_OFF_with_sentences.csv")
+tuning_idx_file     = os.path.join(model_dir, "tuning_data_indexes.csv")
 training_folds_file = os.path.join(model_dir, "training_splits.pkl")
-params_file = os.path.join(model_dir, "Explanatory_model_num_of_ingredients_Params.pkl")
-cv_metrics_file = os.path.join(metrics_dir, "Explanatory_model_num_of_ingredients_CVmetrics.pkl")
-metrics_prefix = os.path.join(metrics_dir, "Explanatory_model_num_of_ingredients")
-models_prefix = os.path.join(model_dir, "Explanatory_model_num_of_ingredients")
-timing_file = os.path.join(model_dir, "Explanatory_model_num_of_ingredients_Timing.pkl")
+params_file   = os.path.join(model_dir, "Explanatory_model_num_of_ingredients_Params.pkl")
+cv_metrics_file     = os.path.join(metrics_dir, "Explanatory_model_num_of_ingredients_CVmetrics.pkl")
+metrics_prefix  = os.path.join(metrics_dir, "Explanatory_model_num_of_ingredients")
+models_prefix= os.path.join(model_dir, "Explanatory_model_num_of_ingredients")
+timing_file         = os.path.join(model_dir, "Explanatory_model_num_of_ingredients_Timing.pkl")
 
 os.makedirs(model_dir, exist_ok=True)
 os.makedirs(metrics_dir, exist_ok=True)
@@ -40,6 +40,7 @@ df_off = pd.read_csv(off_file, sep='\t')
 # Drop rows missing 'ingredients_text' or 'nova_group'
 df_off = df_off.dropna(subset=["ingredients_text", "nova_group"]).reset_index(drop=True)
 
+
 def clean_ingredients(text):
     no_paren = re.sub(r"\([^)]*\)", "", text)
     no_brack = re.sub(r"\[[^]]*\]", "", no_paren)
@@ -49,13 +50,12 @@ def clean_ingredients(text):
 # compute number of ingredients
 df_off['num_ingredients'] = df_off['ingredients_text'].astype(str).apply(clean_ingredients)
 
-# Prepare feature matrix X and label y
+# features and labels
 X = df_off[['num_ingredients']].values
 y = (df_off['nova_group'].astype(int) - 1).values
 num_classes = len(np.unique(y))
-
 print(f"Prepared OFF data: X shape {X.shape}, y shape {y.shape}, classes: {num_classes}")
-print(f"Detected {num_classes} NOVA classes.")
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # 2. Load tuning & fold indexes
@@ -122,7 +122,7 @@ joblib.dump(best_params, params_file)
 start_cv = time.time()
 auc, aup, models = AUCAUPkfold_from_file(
     X, y,
-    type="RF",
+    model_type="RF",
     params_file=params_file,
     splits=df_folds,
     models_prefix=models_prefix,
@@ -146,3 +146,6 @@ timing = {
 }
 
 joblib.dump(timing, timing_file)
+
+
+

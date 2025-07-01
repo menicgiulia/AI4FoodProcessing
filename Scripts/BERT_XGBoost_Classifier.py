@@ -43,9 +43,9 @@ embeddings_df['code'] = embeddings_df['code'].astype(str)
 X = embeddings_df.iloc[:, 2:-1].apply(pd.to_numeric, errors='coerce').fillna(0).values
 # Adjust labels (subtract 1)
 y = (embeddings_df["nova_group"].astype(int) - 1).values
-num_classes = len(np.unique(y))
 
 print(f"Data loaded: X shape {X.shape}, y shape {y.shape}")
+num_classes = len(np.unique(y))
 print(f"Number of classes detected: {num_classes}")
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -110,6 +110,7 @@ start_tune = time.time()
 with tqdm_joblib(tqdm(desc="XGB tuning on 20%", total=50)):
     search.fit(X_tune, y_tune)
 
+
 param_search_time = time.time() - start_tune
 
 best_params = search.best_params_
@@ -121,13 +122,14 @@ joblib.dump(best_params, params_file)
 start_cv = time.time()
 auc, aup, models = AUCAUPkfold_from_file(
     X, y, 
-    type='XGB', 
+    model_type='XGB', 
     params_file=params_file,
     splits=df_folds,
     models_prefix=models_prefix,
     metrics_prefix=metrics_prefix,
     verbose=True
 )
+
 
 cv_time = time.time() - start_cv
 
@@ -145,3 +147,6 @@ timing = {
 }
 
 joblib.dump(timing, timing_file)
+
+
+

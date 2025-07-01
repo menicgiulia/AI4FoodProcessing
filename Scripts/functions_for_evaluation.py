@@ -7,6 +7,7 @@ from sklearn.feature_selection import VarianceThreshold
 from sklearn.feature_selection import RFE
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import precision_score, recall_score, roc_auc_score, roc_curve, average_precision_score, precision_recall_curve
+#from scipy import interp
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import classification_report
 from sklearn.model_selection import RandomizedSearchCV
@@ -22,6 +23,7 @@ from tensorflow import keras
 from tensorflow.keras import layers
 import joblib
 import h5py
+
 
 num_classes=4
 
@@ -58,6 +60,13 @@ def multiclass_average_precision_curve(y_test, y_probs):
     return (precision, recall)
 
 def build_small_nn(input_dim, num_units=32, dropout_rate=0.0, learning_rate=0.001):
+    """
+    Build a small neural network with one hidden layer.
+      - input_dim: Number of input features.
+      - num_units: Number of units in the hidden layer.
+      - dropout_rate: Dropout rate (0.0 means no dropout).
+      - learning_rate: Learning rate for the Adam optimizer.
+    """
     model = keras.Sequential()
     model.add(layers.InputLayer(shape=(input_dim,)))
     model.add(layers.Dense(num_units, activation='relu'))
@@ -72,7 +81,8 @@ def build_small_nn(input_dim, num_units=32, dropout_rate=0.0, learning_rate=0.00
 
 
 
-def AUCAUPkfold_from_file(X, y, model_type, params_file, splits, models_prefix, metrics_prefix, verbose=True):
+def AUCAUPkfold_from_file(X, y, model_type, params_file, splits,
+                          models_prefix, metrics_prefix, verbose=True):
     best_params = joblib.load(params_file)
     classes = np.unique(y)
     n_classes = len(classes)
@@ -85,7 +95,8 @@ def AUCAUPkfold_from_file(X, y, model_type, params_file, splits, models_prefix, 
     for i, fold in enumerate(splits):
         tr, te = fold['train'], fold['test']
         if model_type == 'RF':
-            clf = RandomForestClassifier(random_state=42, n_jobs=-1, **best_params)
+            clf = RandomForestClassifier(random_state=42, n_jobs=-1, 
+                                         **best_params)
             clf.fit(X[tr], y[tr])
             y_proba = clf.predict_proba(X[te])
             models.append(clf)
@@ -141,7 +152,7 @@ def AUCAUPkfold_from_file(X, y, model_type, params_file, splits, models_prefix, 
     joblib.dump(prcs,     metrics_prefix + "_PRC.pkl")
     if model_type in ('RF', 'XGB'):
         joblib.dump(models, models_prefix + "_models.pkl")
-    else:  
+    else:  # NN
         with h5py.File(models_prefix + "_models.h5", "w") as hf:
             for idx, m in enumerate(models):
                 grp = hf.create_group(f"fold_{idx}")

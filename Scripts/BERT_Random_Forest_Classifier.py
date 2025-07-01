@@ -24,8 +24,8 @@ tuning_idx_file = os.path.join(model_dir, "tuning_data_indexes.csv")
 training_folds_file = os.path.join(model_dir, "training_splits.pkl")
 params_file = os.path.join(model_dir, "BERT_Random_Forest_Classifier_Params.pkl")
 cv_metrics_file = os.path.join(metrics_dir, "BERT_Random_Forest_Classifier_CVmetrics.pkl")
-metrics_prefix = os.path.join(metrics_dir, "BERT_Random_Forest_Classifier")
-models_prefix= os.path.join(model_dir, "BERT_Random_Forest_Classifier")
+metrics_prefix = os.path.join(metrics_dir, "BERT_Random_Forest_Classifier_no_class_balancings")
+models_prefix= os.path.join(model_dir, "BERT_Random_Forest_Classifier_no_class_balancings")
 timing_file = os.path.join(model_dir, "BERT_Random_Forest_Classifier_Timing.pkl")
 
 os.makedirs(model_dir, exist_ok=True)
@@ -60,6 +60,7 @@ splits = [
 # ──────────────────────────────────────────────────────────────────────────────
 # 3. Hyperparameter tuning on the 20%
 # ──────────────────────────────────────────────────────────────────────────────
+# Define parameter grid
 X_tune, y_tune = X[tune_idx], y[tune_idx]
 
 n_estimators = [int(x) for x in np.linspace(200, 2000, num=10)]
@@ -79,6 +80,7 @@ search = RandomizedSearchCV(
     scoring='accuracy',
     cv=5,
     n_jobs=-1,
+    random_state=42,
     verbose=2
 ) 
 
@@ -98,8 +100,8 @@ start_tune = time.time()
 with tqdm_joblib(tqdm(desc="RF tuning on 20%", total=50)):
     search.fit(X_tune, y_tune)
 
-param_search_time = time.time() - start_tune
 
+param_search_time = time.time() - start_tune
 best_params = search.best_params_
 joblib.dump(best_params, params_file)
 
@@ -107,9 +109,10 @@ joblib.dump(best_params, params_file)
 # 4. 5‑fold CV on the remaining 80%
 # ──────────────────────────────────────────────────────────────────────────────
 start_cv = time.time()
+
 auc, aup, models = AUCAUPkfold_from_file(
     X, y,
-    type='RF',
+    model_type='RF',
     params_file=params_file,
     splits=df_folds,
     models_prefix=models_prefix,
@@ -133,3 +136,7 @@ timing = {
 }
 
 joblib.dump(timing, timing_file)
+
+
+
+

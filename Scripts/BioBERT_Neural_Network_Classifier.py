@@ -11,12 +11,12 @@ from sklearn.metrics import (
 )
 from tqdm import tqdm
 from tqdm_joblib import tqdm_joblib
-
+import psutil
 from scikeras.wrappers import KerasClassifier
 from tensorflow import keras
 from tensorflow.keras import layers
-
-import psutil
+from tqdm import tqdm
+from tqdm_joblib import tqdm_joblib
 physical_cores = psutil.cpu_count(logical=False)
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -47,9 +47,9 @@ embeddings_df['code'] = embeddings_df['code'].astype(str)
 X = embeddings_df.iloc[:, 2:-1].apply(pd.to_numeric, errors='coerce').fillna(0).values
 # Adjust labels (subtract 1)
 y = (embeddings_df["nova_group"].astype(int) - 1).values
-num_classes = len(np.unique(y))
 
 print(f"Data loaded: X shape {X.shape}, y shape {y.shape}")
+num_classes = len(np.unique(y))
 print(f"Number of classes detected: {num_classes}")
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -132,10 +132,12 @@ nn_random_search = RandomizedSearchCV(
 )
 
 start_time = time.time()
+
 with tqdm_joblib(tqdm(desc="NN Expanded Search", total=n_iter)):
     nn_random_search.fit(X_tune, y_tune)
 
-param_search_time = time.time() - start_time
+end_time = time.time()
+param_search_time = end_time - start_time
 
 print("Best CV BERT NN Accuracy:", nn_random_search.best_score_)
 print("Hyperparameter search time: {:.2f} seconds".format(param_search_time))
@@ -148,13 +150,14 @@ joblib.dump(best_params, params_file)
 start_cv = time.time()
 auc, aup, models = AUCAUPkfold_from_file(
     X, y, 
-    type='NN', 
+    model_type='NN', 
     params_file=params_file,
     splits=df_folds,
     models_prefix=models_prefix,
     metrics_prefix=metrics_prefix,
     verbose=True
 )
+
 
 cv_time = time.time() - start_cv
 
@@ -172,3 +175,6 @@ timing = {
 }
 
 joblib.dump(timing, timing_file)
+
+
+

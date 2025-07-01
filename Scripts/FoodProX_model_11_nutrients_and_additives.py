@@ -22,11 +22,11 @@ metrics_dir = "Metrics"
 off_file = os.path.join(data_dir, "Filtered_OFF_with_sentences.csv")
 tuning_idx_file = os.path.join(model_dir, "tuning_data_indexes.csv")
 training_folds_file = os.path.join(model_dir, "training_splits.pkl")
-params_file = os.path.join(model_dir, "FoodProX_model_11_nutrients_and_additives_Params.pkl")
-cv_metrics_file = os.path.join(metrics_dir, "FoodProX_model_11_nutrients_and_additives_CVmetrics.pkl")
-metrics_prefix = os.path.join(metrics_dir, "FoodProX_model_11_nutrients_and_additives")
-models_prefix= os.path.join(model_dir, "FoodProX_model_11_nutrients")
-timing_file = os.path.join(model_dir, "FoodProX_model_11_nutrients_and_additives_Timing.pkl")
+params_file = os.path.join(model_dir, "FoodProX_model_11_nutrients_and_additives_no_class_balancing_Params.pkl")
+cv_metrics_file = os.path.join(metrics_dir, "FoodProX_model_11_nutrients_and_additives_no_class_balancing_CVmetrics.pkl")
+metrics_prefix = os.path.join(metrics_dir, "FoodProX_model_11_nutrients_and_additives_no_class_balancing")
+models_prefix= os.path.join(model_dir, "FoodProX_model_11_nutrients_and_additives_no_class_balancing")
+timing_file = os.path.join(model_dir, "FoodProX_model_11_nutrients_and_additives_no_class_balancing_Timing.pkl")
 
 os.makedirs(model_dir, exist_ok=True)
 os.makedirs(metrics_dir, exist_ok=True)
@@ -50,13 +50,10 @@ nutrients = nut_off[:-1]
 for col in nutrients:
     df_off[col] = np.log(df_off[col]).replace(-np.inf, -20)
 
-# Prepare feature matrix X and label y
+
 X = df_off[nut_off].values
 y = (df_off['nova_group'].astype(int) - 1).values
 num_classes = len(np.unique(y))
-
-print(f"Prepared OFF data: X shape {X.shape}, y shape {y.shape}")
-print(f"Detected {num_classes} NOVA classes.")
 
 # ──────────────────────────────────────────────────────────────────────────────
 # 2. Load tuning & fold indexes
@@ -84,7 +81,7 @@ grid = {
 }
 
 search = GridSearchCV(
-    estimator=RandomForestClassifier(random_state=42, class_weight='balanced'),
+    estimator=RandomForestClassifier(random_state=42), #, class_weight='balanced'),
     param_grid=grid,      
     scoring='accuracy',
     cv=5,
@@ -110,7 +107,6 @@ with tqdm_joblib(tqdm(desc="RF tuning on 20%", total=50)):
     search.fit(X_tune, y_tune)
 
 param_search_time = time.time() - start_tune
-
 best_params = search.best_params_
 joblib.dump(best_params, params_file)
 
@@ -120,7 +116,7 @@ joblib.dump(best_params, params_file)
 start_cv = time.time()
 auc, aup, models = AUCAUPkfold_from_file(
     X, y,
-    type = 'RF',
+    model_type = 'RF',
     params_file=params_file,
     splits=df_folds,
     models_prefix=models_prefix,
@@ -128,8 +124,8 @@ auc, aup, models = AUCAUPkfold_from_file(
     verbose=True
 )
 
-cv_time = time.time() - start_cv
 
+cv_time = time.time() - start_cv
 cv_summary = {
     'auc_mean':  (auc.mean(), auc.std()),
     'auprc_mean':(aup.mean(), aup.std())
@@ -144,3 +140,6 @@ timing = {
 }
 
 joblib.dump(timing, timing_file)
+
+
+

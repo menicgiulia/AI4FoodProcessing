@@ -22,7 +22,7 @@ data_dir = "Data"
 model_dir = "Models"
 metrics_dir = "Metrics"
 embeddings_file = os.path.join(data_dir, "bio_bert_embeddings.tsv")
-tuning_idx_file = os.path.join(model_dir, "tuning_data_indexes.csv")
+tuning_idx_file  = os.path.join(model_dir, "tuning_data_indexes.csv")
 training_folds_file = os.path.join(model_dir, "training_splits.pkl")
 params_file = os.path.join(model_dir, "BioBERT_XGBoost_Classifier_Params.pkl")
 cv_metrics_file = os.path.join(metrics_dir, "BioBERT_XGBoost_Classifier_CVmetrics.pkl")
@@ -43,9 +43,9 @@ embeddings_df['code'] = embeddings_df['code'].astype(str)
 X = embeddings_df.iloc[:, 2:-1].apply(pd.to_numeric, errors='coerce').fillna(0).values
 # Adjust labels if required (subtract 1 in this example)
 y = (embeddings_df["nova_group"].astype(int) - 1).values
-num_classes = len(np.unique(y))
 
 print(f"Data loaded: X shape {X.shape}, y shape {y.shape}")
+num_classes = len(np.unique(y))
 print(f"Number of classes detected: {num_classes}")
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -62,6 +62,8 @@ splits = [
 # 3. Hyperparameter tuning on the 20%
 # ──────────────────────────────────────────────────────────────────────────────
 X_tune, y_tune = X[tune_idx], y[tune_idx]
+
+
 n_estimators = [int(x) for x in np.linspace(200, 2000, num=10)]
 max_features = ['log2','sqrt']
 max_depth    = [int(x) for x in np.linspace(100,500,num=11)] + [None]
@@ -71,6 +73,12 @@ grid = {
     'max_features':   max_features,
     'max_depth':      max_depth
 }
+
+
+
+from sklearn.model_selection import GridSearchCV
+from xgboost import XGBClassifier
+
 
 xgb = XGBClassifier(
     random_state=42,
@@ -107,6 +115,7 @@ start_tune = time.time()
 with tqdm_joblib(tqdm(desc="XGB tuning on 20%", total=50)):
     search.fit(X_tune, y_tune)
 
+
 param_search_time = time.time() - start_tune
 
 best_params = search.best_params_
@@ -118,13 +127,14 @@ joblib.dump(best_params, params_file)
 start_cv = time.time()
 auc, aup, models = AUCAUPkfold_from_file(
     X, y, 
-    type='XGB', 
+    model_type='XGB', 
     params_file=params_file,
     splits=df_folds,
     models_prefix=models_prefix,
     metrics_prefix=metrics_prefix,
     verbose=True
 )
+
 
 cv_time = time.time() - start_cv
 
@@ -142,3 +152,6 @@ timing = {
 }
 
 joblib.dump(timing, timing_file)
+
+
+
