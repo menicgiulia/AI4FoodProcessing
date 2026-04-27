@@ -63,27 +63,26 @@ splits = [
 # ──────────────────────────────────────────────────────────────────────────────
 X_tune, y_tune = X[tune_idx], y[tune_idx]
 
-
-n_estimators = [int(x) for x in np.linspace(200, 2000, num=10)]
-max_features = ['log2','sqrt']
-max_depth    = [int(x) for x in np.linspace(100,500,num=11)] + [None]
+n_estimators = [400, 800, 1200, 1600, 2000]
+colsample_bytree = [0.6, 0.7, 0.8, 0.9]
+max_depth    = [3, 4, 5, 6, 8, 10]
+learning_rate = [0.01, 0.03, 0.05, 0.1]
+subsample = [0.6, 0.7, 0.8, 0.9]
 
 grid = {
-    'n_estimators':   n_estimators,
-    'max_features':   max_features,
-    'max_depth':      max_depth
+    'n_estimators':       n_estimators,
+    'colsample_bytree':   colsample_bytree,
+    'max_depth':          max_depth,
+    'learning_rate':      learning_rate,
+    'subsample':          subsample
 }
-
-
-
-from sklearn.model_selection import GridSearchCV
-from xgboost import XGBClassifier
-
 
 xgb = XGBClassifier(
     random_state=42,
     use_label_encoder=False,
-    eval_metric='logloss',
+    num_class= num_classes,
+    objective='multi:softprob',
+    eval_metric='mlogloss',
     tree_method='hist',   
     n_jobs=1,            
     verbosity=0          
