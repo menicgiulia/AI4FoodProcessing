@@ -67,7 +67,7 @@ X_tune, y_tune = X[tune_idx], y[tune_idx]
 n_estimators = [400, 800, 1200, 1600, 2000]
 colsample_bytree = [0.6, 0.7, 0.8, 0.9]
 max_depth    = [3, 4, 5, 6, 8, 10]
-learning_rate = [0.01, 0.03, 0.05, 0.1]
+learning_rate = [0.05, 0.1, 0.2, 0.3]
 subsample = [0.6, 0.7, 0.8, 0.9]
 
 grid = {
